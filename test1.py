@@ -101,13 +101,17 @@ def Save_Show_Wave_Spec(x):
     # SegmentControls()
 
 #Función para filtrado de señal
+#PASA-BAJO -> 10000 Hz
+#PASA-ALTO -> 1000 Hz
+#PASA-BANDA -> 1000-5000 Hz
 def FiltrarS(S,F):
     if (S==1) and (F==1):
         SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
         EspFiltrar= SFiltrar.make_spectrum()
-        EspFiltrar.low_pass(100)#PASA-BAJO
+        EspFiltrar.low_pass(10000)#PASA-BAJO
         SFiltrada= EspFiltrar.make_wave()
         SFiltrada.normalize()
+        SFiltrada.write('outputRecording_Filtered.wav')
         #Guardado y Mostrado de resultados
         SFiltrada.plot(color='#66a3ff')
         plt.xlabel('Tiempo (s)')
@@ -139,9 +143,10 @@ def FiltrarS(S,F):
     if (S==1) and (F==2):
         SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
         EspFiltrar= SFiltrar.make_spectrum()
-        EspFiltrar.high_pass(100)#PASA-ALTO
+        EspFiltrar.high_pass(1000)#PASA-ALTO
         SFiltrada= EspFiltrar.make_wave()
         SFiltrada.normalize()
+        SFiltrada.write('outputRecording_Filtered.wav')
         #Guardado y Mostrado de resultados
         SFiltrada.plot(color='#66a3ff')
         plt.xlabel('Tiempo (s)')
@@ -173,9 +178,10 @@ def FiltrarS(S,F):
     if (S==1) and (F==3):
         SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
         EspFiltrar= SFiltrar.make_spectrum()
-        EspFiltrar.band_stop(100,200)#PASA-BANDA
+        EspFiltrar.band_stop(1000,5000)#PASA-BANDA
         SFiltrada= EspFiltrar.make_wave()
         SFiltrada.normalize()
+        SFiltrada.write('outputRecording_Filtered.wav')
         #Guardado y Mostrado de resultados
         SFiltrada.plot(color='#66a3ff')
         plt.xlabel('Tiempo (s)')
@@ -207,9 +213,10 @@ def FiltrarS(S,F):
     if (S==2) and (F==1):
         SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
         EspFiltrar= SFiltrar.make_spectrum()
-        EspFiltrar.low_pass(100)#PASA-BAJO
+        EspFiltrar.low_pass(10000)#PASA-BAJO
         SFiltrada= EspFiltrar.make_wave()
         SFiltrada.normalize()
+        SFiltrada.write('outputRecording_Filtered.wav')
         #Guardado y Mostrado de resultados
         SFiltrada.plot(color='#66a3ff')
         plt.xlabel('Tiempo (s)')
@@ -241,9 +248,10 @@ def FiltrarS(S,F):
     if (S==2) and (F==2):
         SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
         EspFiltrar= SFiltrar.make_spectrum()
-        EspFiltrar.high_pass(100)#PASA-ALTO
+        EspFiltrar.high_pass(1000)#PASA-ALTO
         SFiltrada= EspFiltrar.make_wave()
         SFiltrada.normalize()
+        SFiltrada.write('outputRecording_Filtered.wav')
         #Guardado y Mostrado de resultados
         SFiltrada.plot(color='#66a3ff')
         plt.xlabel('Tiempo (s)')
@@ -275,9 +283,10 @@ def FiltrarS(S,F):
     if (S==2) and (F==3):
         SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
         EspFiltrar= SFiltrar.make_spectrum()
-        EspFiltrar.band_stop(100,200)#PASA-BANDA
+        EspFiltrar.band_stop(1000,5000)#PASA-BANDA
         SFiltrada= EspFiltrar.make_wave()
         SFiltrada.normalize()
+        SFiltrada.write('outputRecording_Filtered.wav')
         #Guardado y Mostrado de resultados
         SFiltrada.plot(color='#66a3ff')
         plt.xlabel('Tiempo (s)')
@@ -309,9 +318,10 @@ def FiltrarS(S,F):
     if (S==3) and (F==1):
         SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
         EspFiltrar= SFiltrar.make_spectrum()
-        EspFiltrar.low_pass(100)#PASA-BAJO
+        EspFiltrar.low_pass(10000)#PASA-BAJO
         SFiltrada= EspFiltrar.make_wave()
         SFiltrada.normalize()
+        SFiltrada.write('outputRecording_Filtered.wav')
         #Guardado y Mostrado de resultados
         SFiltrada.plot(color='#66a3ff')
         plt.xlabel('Tiempo (s)')
@@ -343,9 +353,10 @@ def FiltrarS(S,F):
     if (S==3) and (F==2):
         SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
         EspFiltrar= SFiltrar.make_spectrum()
-        EspFiltrar.high_pass(100)#PASA-ALTO
+        EspFiltrar.high_pass(1000)#PASA-ALTO
         SFiltrada= EspFiltrar.make_wave()
         SFiltrada.normalize()
+        SFiltrada.write('outputRecording_Filtered.wav')
         #Guardado y Mostrado de resultados
         SFiltrada.plot(color='#66a3ff')
         plt.xlabel('Tiempo (s)')
@@ -377,9 +388,10 @@ def FiltrarS(S,F):
     if (S==3) and (F==3):
         SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
         EspFiltrar= SFiltrar.make_spectrum()
-        EspFiltrar.band_stop(100,200)#PASA-BANDA
+        EspFiltrar.band_stop(1000,5000)#PASA-BANDA
         SFiltrada= EspFiltrar.make_wave()
         SFiltrada.normalize()
+        SFiltrada.write('outputRecording_Filtered.wav')
         #Guardado y Mostrado de resultados
         SFiltrada.plot(color='#66a3ff')
         plt.xlabel('Tiempo (s)')
