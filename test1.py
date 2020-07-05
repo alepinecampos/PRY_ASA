@@ -31,7 +31,9 @@ tabControl.pack(expand=1,fill="both")
 global etiqueta
 etiqueta=0
 global durations
-durations=[]
+durations=[0,1,2,3,4,5,6,7,8]
+global sBox6
+global sBox7
 
 #Función para iniciar grabación 
 def StartRecording():
@@ -99,11 +101,171 @@ def Save_Show_Wave_Spec(x):
     sIn_Label.image=render2
     sIn_Label.grid(row=x, column=6, sticky="nsew", padx=1, pady=1)
     ShowDuration(x)
+    SegmentControls()
 
 #Función para filtrado de señal
-def FiltrarS():
-    print(sBox4.get())
-    print(sBox5.get())
+def FiltrarS(S,F):
+    #Señales
+    if (S==1) and (F==1):
+        SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
+        EspFiltrar= SFiltrar.make_spectrum()
+        EspFiltrar.low_pass(100)#Cambiar segun filtro
+        SFiltrada= EspFiltrar.make_wave()
+        SFiltrada.normalize()
+        #Guardado y Mostrado de resultados
+        SFiltrada.plot(color='#66a3ff')
+        plt.xlabel('Tiempo (s)')
+        plt.title('Onda Filtrada')
+        plt.grid(True)
+        plt.savefig('Filtered_Wave.png')
+        plt.clf()
+        EspFiltrar.plot(color='#ff471a')
+        plt.xlabel('Frecuencia (Hz)')
+        plt.title('Espectro Filtrado')
+        plt.grid(True)
+        plt.savefig('Filtered_Spectrum.png')
+        plt.clf()
+        #FilteredWaveImage
+        wIn_Img=Image.open('Filtered_Wave.png')
+        wIn_Img = wIn_Img.resize((int((wIn_Img.width)-((wIn_Img.width)*0.5)),int((wIn_Img.height)-((wIn_Img.height)*0.5))), Image.ANTIALIAS)
+        render1=ImageTk.PhotoImage(wIn_Img)
+        wIn_Label = Label(frame7,image=render1)
+        wIn_Label.image = render1
+        wIn_Label.grid(row=1, column=5, sticky="nsew", padx=1, pady=1)
+        #FilteredSpectrumImage
+        sIn_Img=Image.open('Filtered_Spectrum.png')
+        sIn_Img = sIn_Img.resize((int((sIn_Img.width)-((sIn_Img.width)*0.5)),int((sIn_Img.height)-((sIn_Img.height)*0.5))), Image.ANTIALIAS)
+        render2=ImageTk.PhotoImage(sIn_Img)
+        sIn_Label = Label(frame7,image=render2)
+        sIn_Label.image=render2
+        sIn_Label.grid(row=1, column=6, sticky="nsew", padx=1, pady=1)
+    
+    if (S==1) and (F==2):
+        SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
+        EspFiltrar= SFiltrar.make_spectrum()
+        EspFiltrar.high_pass(100)#Cambiar segun filtro
+        SFiltrada= EspFiltrar.make_wave()
+        SFiltrada.normalize()
+        #Guardado y Mostrado de resultados
+        SFiltrada.plot(color='#66a3ff')
+        plt.xlabel('Tiempo (s)')
+        plt.title('Onda Filtrada')
+        plt.grid(True)
+        plt.savefig('Filtered_Wave.png')
+        plt.clf()
+        EspFiltrar.plot(color='#ff471a')
+        plt.xlabel('Frecuencia (Hz)')
+        plt.title('Espectro Filtrado')
+        plt.grid(True)
+        plt.savefig('Filtered_Spectrum.png')
+        plt.clf()
+        #FilteredWaveImage
+        wIn_Img=Image.open('Filtered_Wave.png')
+        wIn_Img = wIn_Img.resize((int((wIn_Img.width)-((wIn_Img.width)*0.5)),int((wIn_Img.height)-((wIn_Img.height)*0.5))), Image.ANTIALIAS)
+        render1=ImageTk.PhotoImage(wIn_Img)
+        wIn_Label = Label(frame7,image=render1)
+        wIn_Label.image = render1
+        wIn_Label.grid(row=1, column=5, sticky="nsew", padx=1, pady=1)
+        #FilteredSpectrumImage
+        sIn_Img=Image.open('Filtered_Spectrum.png')
+        sIn_Img = sIn_Img.resize((int((sIn_Img.width)-((sIn_Img.width)*0.5)),int((sIn_Img.height)-((sIn_Img.height)*0.5))), Image.ANTIALIAS)
+        render2=ImageTk.PhotoImage(sIn_Img)
+        sIn_Label = Label(frame7,image=render2)
+        sIn_Label.image=render2
+        sIn_Label.grid(row=1, column=6, sticky="nsew", padx=1, pady=1)
+
+    if (S==1) and (F==3):
+        SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
+        EspFiltrar= SFiltrar.make_spectrum()
+        EspFiltrar.band_stop(100,200)#Cambiar segun filtro
+        SFiltrada= EspFiltrar.make_wave()
+        SFiltrada.normalize()
+        #Guardado y Mostrado de resultados
+        SFiltrada.plot(color='#66a3ff')
+        plt.xlabel('Tiempo (s)')
+        plt.title('Onda Filtrada')
+        plt.grid(True)
+        plt.savefig('Filtered_Wave.png')
+        plt.clf()
+        EspFiltrar.plot(color='#ff471a')
+        plt.xlabel('Frecuencia (Hz)')
+        plt.title('Espectro Filtrado')
+        plt.grid(True)
+        plt.savefig('Filtered_Spectrum.png')
+        plt.clf()
+        #FilteredWaveImage
+        wIn_Img=Image.open('Filtered_Wave.png')
+        wIn_Img = wIn_Img.resize((int((wIn_Img.width)-((wIn_Img.width)*0.5)),int((wIn_Img.height)-((wIn_Img.height)*0.5))), Image.ANTIALIAS)
+        render1=ImageTk.PhotoImage(wIn_Img)
+        wIn_Label = Label(frame7,image=render1)
+        wIn_Label.image = render1
+        wIn_Label.grid(row=1, column=5, sticky="nsew", padx=1, pady=1)
+        #FilteredSpectrumImage
+        sIn_Img=Image.open('Filtered_Spectrum.png')
+        sIn_Img = sIn_Img.resize((int((sIn_Img.width)-((sIn_Img.width)*0.5)),int((sIn_Img.height)-((sIn_Img.height)*0.5))), Image.ANTIALIAS)
+        render2=ImageTk.PhotoImage(sIn_Img)
+        sIn_Label = Label(frame7,image=render2)
+        sIn_Label.image=render2
+        sIn_Label.grid(row=1, column=6, sticky="nsew", padx=1, pady=1)
+    
+
+
+#Función para controles para extracción de segmento
+def SegmentControls():
+    #Columna #7(Controles para extraer segmentos)#Resultados_1
+    label=Label(frame7, text="A continuación se presentan algunos controles\n para extraer un segmento de la señal", bg="#b3ccff")
+    label.grid(row=0, column=7, sticky="nsew", padx=1, pady=1)
+    label=Label(frame7, text="Seleccione inicio", bg="#b3ccff")
+    label.grid(row=1, column=7, sticky="nsew", padx=1, pady=1)
+    global sBox6
+    sBox6 = tk.Spinbox(frame7, from_=0,to=((durations[0]*60*60)+(durations[1]*60)+(durations[2])),wrap=True) #Inicio
+    sBox6.grid(row=2, column=7, sticky="nsew", padx=1, pady=1)
+    label=Label(frame7, text="Seleccione duración", bg="#b3ccff")
+    label.grid(row=3, column=7, sticky="nsew", padx=1, pady=1)
+    global sBox7
+    sBox7 = tk.Spinbox(frame7, from_=0,to=((durations[0]*60*60)+(durations[1]*60)+(durations[2])),wrap=True) #Duración
+    sBox7.grid(row=4, column=7, sticky="nsew", padx=1, pady=1)
+    btn4 = tk.Button(frame7, text="Show Segment")
+    btn4.grid(row=5, column=7, sticky="nsew", padx=1, pady=1,command= lambda: Make_ShowSegment_1())
+
+#Función para mostrar segmentos
+def Make_ShowSegment_1():
+    WaveIn = read_wave('outputRecording1.wav')
+    Seg1= WaveIn.segment(start=int(sBox6.get()),duration=int(sBox7.get()))
+    Seg1.plot(color='#66a3ff')
+    plt.xlabel('Tiempo (s)')
+    plt.title('Segmento Onda Filtrada #1')
+    plt.grid(True)
+    plt.savefig('TestResultadoFiltrado_O1.png')
+    plt.clf()
+    SpecSeg1 = Seg1.make_spectrum()
+    SpecSeg1.plot(color='#ff471a')
+    plt.xlabel('Frecuencia (Hz)')
+    plt.title('Segmento Espectro Filtrado #1')
+    plt.grid(True)
+    plt.savefig('TestResultadoFiltrado_S1.png')
+    plt.clf()
+    #WaveImage
+    label = Label(frame7, text="Segmento Filtrado")
+    label.grid(row=2, column=5, sticky="nsew", padx=1, pady=1)
+    label = Label(frame7, text="Segmento Filtrado")
+    label.grid(row=2, column=6, sticky="nsew", padx=1, pady=1)
+    wIn_Img=Image.open('TestResultadoFiltrado_O1.png')
+    wIn_Img = wIn_Img.resize((int((wIn_Img.width)-((wIn_Img.width)*0.5)),int((wIn_Img.height)-((wIn_Img.height)*0.5))), Image.ANTIALIAS)
+    render1=ImageTk.PhotoImage(wIn_Img)
+    wIn_Label = Label(frame7,image=render1)
+    wIn_Label.image = render1
+    wIn_Label.grid(row=3, column=5, sticky="nsew", padx=1, pady=1)
+    #SpectrumImage
+    sIn_Img=Image.open('TestResultadoFiltrado_S1.png')
+    sIn_Img = sIn_Img.resize((int((sIn_Img.width)-((sIn_Img.width)*0.5)),int((sIn_Img.height)-((sIn_Img.height)*0.5))), Image.ANTIALIAS)
+    render2=ImageTk.PhotoImage(sIn_Img)
+    sIn_Label = Label(frame7,image=render2)
+    sIn_Label.image=render2
+    sIn_Label.grid(row=3, column=6, sticky="nsew", padx=1, pady=1)
+
+  
+
 
 #Frame, for recording controls and button
 frame = tk.Frame(tab1, bg='#b3ccff', bd=1)
@@ -123,15 +285,10 @@ frame3.place(relx=0, rely=0.05, relwidth=0.4, relheight=1.3)
 frame5 = tk.Frame(tab3, bg='#b3ccff', bd=1)#SpinBoxes Filtros
 frame5.place(relx=0.4, rely=0, relwidth=0.8, relheight=1.3)
 
-#Frame, for results #1 
+#Frame, for filtered results
 frame7 = tk.Frame(tab4, bg='#b3ccff', bd=1)
 frame7.place(relx=0, rely=0, relwidth=1.2, relheight=1.3)
-#Frame, for results #1 
-frame8 = tk.Frame(tab5, bg='#b3ccff', bd=1)
-frame8.place(relx=0, rely=0, relwidth=1.2, relheight=1.3)
-#Frame, for results #1 
-frame9 = tk.Frame(tab6, bg='#b3ccff', bd=1)
-frame9.place(relx=0, rely=0, relwidth=1.2, relheight=1.3)
+
 
 #-----------------------------------------------------------Pestaña-Grabar-----------------------------------------------------------------------#
 #------------------------------------FRAME #1------------------------------------------#
@@ -178,19 +335,19 @@ label.grid(row=3, column=1, sticky="nsew", padx=1, pady=1)
 
 #----------------------------------FRAME #5--------------------------------------------#
 #Selección de filtro y señal a filtrar
-F = ["Filtro #1","Filtro #2","Filtro #3"]
-S = ["Señal #1","Señal #2","Señal #3"]
+# F = ["Filtro #1","Filtro #2","Filtro #3"]
+# S = ["Señal #1","Señal #2","Señal #3"]
 #Creating SpinBoxes
-sBox4= tk.Spinbox(frame5, values=S,wrap=True) #Señales
+sBox4= tk.Spinbox(frame5, from_=0,to=3,wrap=True) #Señales
 sBox4.place(relx=0.12, rely=0.01, relwidth=0.1, relheight=0.02)
 label=Label(frame5, text="Seleccione la señal \nque desea filtrar:", bg="#b3ccff")
 label.place(relx=0, rely=0)
-sBox5= tk.Spinbox(frame5, values=F,wrap=True) #Filtros
+sBox5= tk.Spinbox(frame5, from_=0,to=3,wrap=True) #Filtros
 sBox5.place(relx=0.15, rely=0.1, relwidth=0.1, relheight=0.02)
 label=Label(frame5, text="Seleccione filtro para filtrar \nla señal seleccionada:", bg="#b3ccff")
 label.place(relx=0, rely=0.09)
 #Creating Filter Button
-btn8 = tk.Button(frame5, text="Filtrar", command= lambda: FiltrarS())
+btn8 = tk.Button(frame5, text="Filtrar", command= lambda: FiltrarS(int(sBox4.get()),int(sBox5.get())))
 btn8.place(relx=0.05, rely=0.14, relwidth=0.04, relheight=0.04)
 
 #-----------------------------------------------------------Pestaña-Datos-----------------------------------------------------------------------#
@@ -272,80 +429,12 @@ label = Label(frame7, text="Mostrar Datos")
 label.grid(row=0, column=4, sticky="nsew", padx=1, pady=1)
 btn10 = tk.Button(frame7, text="Mostrar Datos")#Añadir parametro command para mostrar datos
 btn10.grid(row=1, column=4, sticky="nsew", padx=1, pady=1)
-#Columna #5(Onda antes del filtro)
-label = Label(frame7, text="Onda Original")
+#Columna #5(Onda despues del filtro)
+label = Label(frame7, text="Onda Filtrada")
 label.grid(row=0, column=5, sticky="nsew", padx=1, pady=1)
-#Columna #7(Espectro antes del filtro)
-label = Label(frame7, text="Espectro Original")
+#Columna #6(Espectro despues del filtro)
+label = Label(frame7, text="Espectro Filtrado")
 label.grid(row=0, column=6, sticky="nsew", padx=1, pady=1)
-
-#-----------------------------------------------------------Pestaña-Resultados#2-----------------------------------------------------------------------#
-#----------------------------------FRAME #8--------------------------------------------#
-#Creates Grid for signals info.
-#Columna #0(Título)
-label = Label(frame8, text="Título")
-label.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
-label = Label(frame8, text="Señal Filtrada #2")
-label.grid(row=1, column=0, sticky="nsew", padx=1, pady=1)
-#Columna #1(Duración)
-label = Label(frame8, text="Duración")
-label.grid(row=0, column=1, sticky="nsew", padx=1, pady=1)
-#Columna #2(Ubicación)
-label = Label(frame8, text="Ubicación")
-label.grid(row=0, column=2, sticky="nsew", padx=1, pady=1)
-labelx = Label(frame8, text='Ubicación') 
-labelx.grid(row=1, column=2, sticky="nsew", padx=1, pady=1)
-labelx.bind("<Button>",OpenPath)
-#Columna #3(Botón de play)
-label = Label(frame8, text="Reproducir Señal")
-label.grid(row=0, column=3, sticky="nsew", padx=1, pady=1)
-btn9 = tk.Button(frame8, text="Play Filtered Signal #2")
-btn9.grid(row=1, column=3, sticky="nsew", padx=1, pady=1)
-#Columna #4(Botones para mostrar onda y espectro)
-label = Label(frame8, text="Mostrar Datos")
-label.grid(row=0, column=4, sticky="nsew", padx=1, pady=1)
-btn10 = tk.Button(frame8, text="Mostrar Datos")#Añadir parametro command para mostrar datos
-btn10.grid(row=1, column=4, sticky="nsew", padx=1, pady=1)
-#Columna #5(Onda antes del filtro)
-label = Label(frame8, text="Onda Original")
-label.grid(row=0, column=5, sticky="nsew", padx=1, pady=1)
-#Columna #7(Espectro antes del filtro)
-label = Label(frame8, text="Espectro Original")
-label.grid(row=0, column=6, sticky="nsew", padx=1, pady=1)
-#-----------------------------------------------------------Pestaña-Resultados#3-----------------------------------------------------------------------#
-#----------------------------------FRAME #9--------------------------------------------#
-#Creates Grid for signals info.
-#Columna #0(Título)
-label = Label(frame9, text="Título")
-label.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
-label = Label(frame9, text="Señal Filtrada #3")
-label.grid(row=1, column=0, sticky="nsew", padx=1, pady=1)
-#Columna #1(Duración)
-label = Label(frame9, text="Duración")
-label.grid(row=0, column=1, sticky="nsew", padx=1, pady=1)
-#Columna #2(Ubicación)
-label = Label(frame9, text="Ubicación")
-label.grid(row=0, column=2, sticky="nsew", padx=1, pady=1)
-labelx = Label(frame9, text='Ubicación') 
-labelx.grid(row=1, column=2, sticky="nsew", padx=1, pady=1)
-labelx.bind("<Button>",OpenPath)
-#Columna #3(Botón de play)
-label = Label(frame9, text="Reproducir Señal")
-label.grid(row=0, column=3, sticky="nsew", padx=1, pady=1)
-btn9 = tk.Button(frame9, text="Play Filtered Signal #3")
-btn9.grid(row=1, column=3, sticky="nsew", padx=1, pady=1)
-#Columna #4(Botones para mostrar onda y espectro)
-label = Label(frame9, text="Mostrar Datos")
-label.grid(row=0, column=4, sticky="nsew", padx=1, pady=1)
-btn10 = tk.Button(frame9, text="Mostrar Datos")#Añadir parametro command para mostrar datos
-btn10.grid(row=1, column=4, sticky="nsew", padx=1, pady=1)
-#Columna #5(Onda antes del filtro)
-label = Label(frame9, text="Onda Original")
-label.grid(row=0, column=5, sticky="nsew", padx=1, pady=1)
-#Columna #7(Espectro antes del filtro)
-label = Label(frame9, text="Espectro Original")
-label.grid(row=0, column=6, sticky="nsew", padx=1, pady=1)
-
 
 
 
