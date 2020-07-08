@@ -29,6 +29,7 @@ tabControl.pack(expand=1,fill="both")
 #Variable global para control de etiqueta de cada grabación
 global etiqueta
 etiqueta=0
+#Variable global para almacenamiento de duraciones de señales
 global durations
 durations=[]
 
@@ -45,7 +46,7 @@ def StartRecording():
     durations.append(sBox3.get()) #Adds duration of recording to array for further use
     fs = 46100 #Sample Rate
     seconds = (H+M+S) #Duration of recording
-    recording = sd.rec(int(seconds*fs), samplerate=fs, channels=2,dtype=np.int16)
+    recording = sd.rec(int(seconds*fs), samplerate=fs, channels=1, dtype=np.int16)
     sd.wait() #Wait until recording is finished
     write('outputRecording'+str(etiqueta)+'.wav',fs,recording) #Saves recording as WAV file in the same folder where this solution  is stored
 
@@ -98,7 +99,6 @@ def Save_Show_Wave_Spec(x):
     sIn_Label.image=render2
     sIn_Label.grid(row=x, column=6, sticky="nsew", padx=1, pady=1)
     ShowDuration(x)
-    # SegmentControls()
 
 #Función para filtrado de señal
 #PASA-BAJO -> 10000 Hz
@@ -420,62 +420,6 @@ def FiltrarS(S,F):
         sIn_Label.image=render2
         sIn_Label.grid(row=1, column=5, sticky="nsew", padx=1, pady=1)
 
-#Función para controles para extracción de segmento
-# def SegmentControls():
-#     #Columna #7(Controles para extraer segmentos)#Resultados_1
-#     label=Label(frame7, text="A continuación se presentan algunos controles\n para extraer un segmento de la señal", bg="#b3ccff")
-#     label.grid(row=0, column=7, sticky="nsew", padx=1, pady=1)
-#     label=Label(frame7, text="Seleccione inicio", bg="#b3ccff")
-#     label.grid(row=1, column=7, sticky="nsew", padx=1, pady=1)
-#     global sBox6
-#     sBox6 = tk.Spinbox(frame7, from_=0,to=((durations[0]*60*60)+(durations[1]*60)+(durations[2])),wrap=True) #Inicio
-#     sBox6.grid(row=2, column=7, sticky="nsew", padx=1, pady=1)
-#     label=Label(frame7, text="Seleccione duración", bg="#b3ccff")
-#     label.grid(row=3, column=7, sticky="nsew", padx=1, pady=1)
-#     global sBox7
-#     sBox7 = tk.Spinbox(frame7, from_=0,to=((durations[0]*60*60)+(durations[1]*60)+(durations[2])),wrap=True) #Duración
-#     sBox7.grid(row=4, column=7, sticky="nsew", padx=1, pady=1)
-#     btn4 = tk.Button(frame7, text="Show Segment")
-#     btn4.grid(row=5, column=7, sticky="nsew", padx=1, pady=1,command= lambda: Make_ShowSegment_1())
-
-#Función para mostrar segmentos
-# def Make_ShowSegment_1():
-    # WaveIn = read_wave('outputRecording1.wav')
-    # Seg1= WaveIn.segment(start=int(sBox6.get()),duration=int(sBox7.get()))
-    # Seg1.plot(color='#66a3ff')
-    # plt.xlabel('Tiempo (s)')
-    # plt.title('Segmento Onda Filtrada #1')
-    # plt.grid(True)
-    # plt.savefig('TestResultadoFiltrado_O1.png')
-    # plt.clf()
-    # SpecSeg1 = Seg1.make_spectrum()
-    # SpecSeg1.plot(color='#ff471a')
-    # plt.xlabel('Frecuencia (Hz)')
-    # plt.title('Segmento Espectro Filtrado #1')
-    # plt.grid(True)
-    # plt.savefig('TestResultadoFiltrado_S1.png')
-    # plt.clf()
-    # #WaveImage
-    # label = Label(frame7, text="Segmento Filtrado")
-    # label.grid(row=2, column=5, sticky="nsew", padx=1, pady=1)
-    # label = Label(frame7, text="Segmento Filtrado")
-    # label.grid(row=2, column=6, sticky="nsew", padx=1, pady=1)
-    # wIn_Img=Image.open('TestResultadoFiltrado_O1.png')
-    # wIn_Img = wIn_Img.resize((int((wIn_Img.width)-((wIn_Img.width)*0.5)),int((wIn_Img.height)-((wIn_Img.height)*0.5))), Image.ANTIALIAS)
-    # render1=ImageTk.PhotoImage(wIn_Img)
-    # wIn_Label = Label(frame7,image=render1)
-    # wIn_Label.image = render1
-    # wIn_Label.grid(row=3, column=5, sticky="nsew", padx=1, pady=1)
-    # #SpectrumImage
-    # sIn_Img=Image.open('TestResultadoFiltrado_S1.png')
-    # sIn_Img = sIn_Img.resize((int((sIn_Img.width)-((sIn_Img.width)*0.5)),int((sIn_Img.height)-((sIn_Img.height)*0.5))), Image.ANTIALIAS)
-    # render2=ImageTk.PhotoImage(sIn_Img)
-    # sIn_Label = Label(frame7,image=render2)
-    # sIn_Label.image=render2
-    # sIn_Label.grid(row=3, column=6, sticky="nsew", padx=1, pady=1)
-
- #Reproducir audio
-
 #Función para reproducir audio original
 def play_sound(x):
     winsound.PlaySound('outputRecording'+str(x)+'.wav', winsound.SND_FILENAME)
@@ -595,11 +539,11 @@ labelx.bind("<Button>",OpenPath)
 #Columna #3(Botón de play)
 label = Label(frame4, text="Reproducir Señal")
 label.grid(row=0, column=3, sticky="nsew", padx=1, pady=1)
-btn2 = tk.Button(frame4, text="Play Signal #1", command= lambda :play_sound(1))
+btn2 = tk.Button(frame4, text="Reproducir Señal #1", command= lambda :play_sound(1))
 btn2.grid(row=1, column=3, sticky="nsew", padx=1, pady=1)
-btn3 = tk.Button(frame4, text="Play Signal #2", command= lambda :play_sound(2))
+btn3 = tk.Button(frame4, text="Reproducir Señal #2", command= lambda :play_sound(2))
 btn3.grid(row=2, column=3, sticky="nsew", padx=1, pady=1)
-btn4 = tk.Button(frame4, text="Play Signal #3", command= lambda :play_sound(3))
+btn4 = tk.Button(frame4, text="Reproducir Señal #3", command= lambda :play_sound(3))
 btn4.grid(row=3, column=3, sticky="nsew", padx=1, pady=1)
 #Columna #4(Botones para mostrar onda y espectro)
 label = Label(frame4, text="Mostrar Datos")
@@ -617,7 +561,7 @@ label.grid(row=0, column=5, sticky="nsew", padx=1, pady=1)
 label = Label(frame4, text="Espectro Original")
 label.grid(row=0, column=6, sticky="nsew", padx=1, pady=1)
 
-#-----------------------------------------------------------Pestaña-Resultados#1-----------------------------------------------------------------------#
+#-----------------------------------------------------------Pestaña-Resultados-----------------------------------------------------------------------#
 #----------------------------------FRAME #7--------------------------------------------#
 #Creates Grid for signals info.
 #Columna #0(Título)
@@ -637,7 +581,7 @@ labelx.bind("<Button>",OpenPath)
 #Columna #3(Botón de play)
 label = Label(frame7, text="Reproducir Señal")
 label.grid(row=0, column=3, sticky="nsew", padx=1, pady=1)
-btn9 = tk.Button(frame7, text="Play Filtered Signal #1", command= lambda :play_filtered_audio())
+btn9 = tk.Button(frame7, text="Reproducir Señal Filtrada", command= lambda :play_filtered_audio())
 btn9.grid(row=1, column=3, sticky="nsew", padx=1, pady=1)
 #Columna #4(Onda despues del filtro)
 label = Label(frame7, text="Onda Filtrada")
@@ -645,8 +589,6 @@ label.grid(row=0, column=4, sticky="nsew", padx=1, pady=1)
 #Columna #5(Espectro despues del filtro)
 label = Label(frame7, text="Espectro Filtrado")
 label.grid(row=0, column=5, sticky="nsew", padx=1, pady=1)
-
-
 
 
 root.mainloop()
