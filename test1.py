@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import Label, ttk
-import datetime
 import sounddevice as sd
 from scipy.io.wavfile import write
 import os
@@ -569,9 +568,6 @@ label = Label(frame7, text="Título")
 label.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
 label = Label(frame7, text="Señal Filtrada #1")
 label.grid(row=1, column=0, sticky="nsew", padx=1, pady=1)
-#Columna #1(Duración)
-label = Label(frame7, text="Duración")
-label.grid(row=0, column=1, sticky="nsew", padx=1, pady=1)
 #Columna #2(Ubicación)
 label = Label(frame7, text="Ubicación")
 label.grid(row=0, column=2, sticky="nsew", padx=1, pady=1)
