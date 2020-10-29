@@ -111,6 +111,8 @@ def FiltrarS(S,F):
         SFiltrada= EspFiltrar.make_wave()
         SFiltrada.normalize()
         SFiltrada.write('outputRecording_Filtered.wav')
+        ##################################
+        EspFiltrado=SFiltrada.make_spectrum()
         #Guardado y Mostrado de resultados
         SFiltrada.plot(color='#66a3ff')
         plt.xlabel('Tiempo (s)')
@@ -484,6 +486,10 @@ label = Label(frame3, text="Filtro #2 Filtro Pasa-Alto")
 label.grid(row=2, column=0, sticky="nsew", padx=1, pady=1)
 label = Label(frame3, text="Filtro #3 Filtro Pasa-Banda")
 label.grid(row=3, column=0, sticky="nsew", padx=1, pady=1)
+label = Label(frame3, text="Filtro #4 Filtro Elimina-Banda")
+label.grid(row=4, column=0, sticky="nsew", padx=1, pady=1)
+label = Label(frame3, text="Filtro #5 Filtro IIR/Recuperación")
+label.grid(row=5, column=0, sticky="nsew", padx=1, pady=1)
 label = Label(frame3, text="Descripción")
 label.grid(row=0, column=1, sticky="nsew", padx=1, pady=1)
 label = Label(frame3, text="Idealmente, un filtro pasa bajo corta  \n todas las frecuencias mayores a una frecuencia de corte νc  \n y permite el paso de las frecuencias menores,  \n sin cambio alguno (por eso se llama pasa bajo")
@@ -492,6 +498,10 @@ label = Label(frame3, text="Idealmente, un filtro pasa alto corta  \n todas las 
 label.grid(row=2, column=1, sticky="nsew", padx=1, pady=1)
 label = Label(frame3, text="Un filtro pasa banda, \n permite pasar algunas frecuencias sin alterarlas, eliminando otras.\n Centramos nuestro filtro en ±ν0 \n y cortamos las frecuencias νc por arriba y por debajo de ν0±νc.")
 label.grid(row=3, column=1, sticky="nsew", padx=1, pady=1)
+label = Label(frame3, text="-----Agregar Descripción de filtro elimina banda------")
+label.grid(row=4, column=1, sticky="nsew", padx=1, pady=1)
+label = Label(frame3, text="-----Agregar Descripción de filtro IIR/Recuperación------")
+label.grid(row=5, column=1, sticky="nsew", padx=1, pady=1)
 
 #----------------------------------FRAME #5--------------------------------------------#
 #Selección de filtro y señal a filtrar
@@ -500,7 +510,7 @@ sBox4= tk.Spinbox(frame5, from_=0,to=3,wrap=True) #Señales
 sBox4.place(relx=0.12, rely=0.01, relwidth=0.1, relheight=0.02)
 label=Label(frame5, text="Seleccione la señal \nque desea filtrar:", bg="#b3ccff")
 label.place(relx=0, rely=0)
-sBox5= tk.Spinbox(frame5, from_=0,to=3,wrap=True) #Filtros
+sBox5= tk.Spinbox(frame5, from_=0,to=5,wrap=True) #Filtros
 sBox5.place(relx=0.15, rely=0.1, relwidth=0.1, relheight=0.02)
 label=Label(frame5, text="Seleccione filtro para filtrar \nla señal seleccionada:", bg="#b3ccff")
 label.place(relx=0, rely=0.09)
@@ -566,7 +576,7 @@ label.grid(row=0, column=6, sticky="nsew", padx=1, pady=1)
 #Columna #0(Título)
 label = Label(frame7, text="Título")
 label.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
-label = Label(frame7, text="Señal Filtrada #1")
+label = Label(frame7, text="Señal Filtrada")
 label.grid(row=1, column=0, sticky="nsew", padx=1, pady=1)
 #Columna #2(Ubicación)
 label = Label(frame7, text="Ubicación")
