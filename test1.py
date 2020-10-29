@@ -111,8 +111,6 @@ def FiltrarS(S,F):
         SFiltrada= EspFiltrar.make_wave()
         SFiltrada.normalize()
         SFiltrada.write('outputRecording_Filtered.wav')
-        ##################################
-        EspFiltrado=SFiltrada.make_spectrum()
         #Guardado y Mostrado de resultados
         SFiltrada.plot(color='#66a3ff')
         plt.xlabel('Tiempo (s)')
