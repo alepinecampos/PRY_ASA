@@ -8,6 +8,7 @@ from thinkdsp import read_wave
 import matplotlib.pyplot as plt
 from PIL import Image, ImageTk
 import winsound
+from numpy import fft
 
 root = tk.Tk()
 root.geometry('1300x700')
@@ -83,6 +84,30 @@ def Save_Show_Wave_Spec(x):
     plt.grid(True)
     plt.savefig('Spectrum'+str(x)+'.png')
     plt.clf()
+    #----------------Testing Power Spectrum------------------
+    plt.plot(SpecIn.fs,SpecIn.amps**2,color='#bd6ecf')
+    # PSpec.plot(color='#bd6ecf')
+    plt.xlabel('Frecuencia (Hz)')
+    plt.title('Power Spectrum #'+str(x))
+    plt.grid(True)
+    plt.savefig('PowSpectrum'+str(x)+'.png')
+    plt.clf()
+    Amplitudes = SpecIn.amps**2
+    indices= Amplitudes>100
+    AmplitudesFiltradas = indices * Amplitudes
+    Frecuencias = SpecIn.fs
+    FrecuenciasFiltradas = indices * Frecuencias
+    SFilt = np.fft.ifft(FrecuenciasFiltradas)
+    plt.plot(SFilt, color='#d31c1c')
+    # PSpec.plot(color='#bd6ecf')
+    plt.xlabel('Frecuencia (Hz)')
+    plt.title('Filtered Spectrum #'+str(x))
+    plt.grid(True)
+    plt.savefig('FilteredPowSpectrum'+str(x)+'.png')
+    plt.clf()
+
+    
+
     #WaveImage
     wIn_Img=Image.open('Wave'+str(x)+'.png')
     wIn_Img = wIn_Img.resize((int((wIn_Img.width)-((wIn_Img.width)*0.5)),int((wIn_Img.height)-((wIn_Img.height)*0.5))), Image.ANTIALIAS)
