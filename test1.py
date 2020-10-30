@@ -94,7 +94,7 @@ def Save_Show_Wave_Spec(x):
     plt.clf()
     Amplitudes = SpecIn.amps**2
     indices= Amplitudes>100
-    AmplitudesFiltradas = indices * Amplitudes
+    # AmplitudesFiltradas = indices * Amplitudes
     Frecuencias = SpecIn.fs
     FrecuenciasFiltradas = indices * Frecuencias
     SFilt = np.fft.ifft(FrecuenciasFiltradas)
