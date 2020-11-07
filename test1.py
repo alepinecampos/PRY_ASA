@@ -85,26 +85,71 @@ def Save_Show_Wave_Spec(x):
     plt.savefig('Spectrum'+str(x)+'.png')
     plt.clf()
     #----------------Testing Power Spectrum------------------
-    plt.plot(SpecIn.fs,SpecIn.amps**2,color='#bd6ecf')
-    # PSpec.plot(color='#bd6ecf')
-    plt.xlabel('Frecuencia (Hz)')
-    plt.title('Power Spectrum #'+str(x))
-    plt.grid(True)
-    plt.savefig('PowSpectrum'+str(x)+'.png')
-    plt.clf()
-    Amplitudes = SpecIn.amps**2
-    indices= Amplitudes>100
+    # plt.plot(SpecIn.fs,SpecIn.amps**2,color='#bd6ecf')
+    # plt.xlabel('Frecuencia (Hz)')
+    # plt.title('Power Spectrum #'+str(x))
+    # plt.grid(True)
+    # plt.savefig('PowSpectrum'+str(x)+'.png')
+    # plt.clf()
+
+    #--------------------------------------------------
+    # t = np.arange(0,46100,(1/46100))
+    # r = len(t)
+    # fhat = np.fft.fft(SpecIn.amps,r) #Complex values Fourier Coef
+    # PS = fhat * np.conj(fhat)/r #Power Spectrum
+    # freqs = (1/((1/46100)*r)) * np.arange(r)
+    # L = np.arange(1,np.floor(r/2),dtype='int')
+
+    # plt.plot(freqs[L],PS[L], label='Noisy')
+    # plt.xlabel('Frecuencia (Hz)')
+    # plt.title('Noisy Power Spectrum #'+str(x))
+    # plt.grid(True)
+    # plt.savefig('NoisyPowSpectrum'+str(x)+'.png')
+    # plt.clf()
+    
+    # indices = PS > 200000
+    # PSclean = PS * indices
+    # fhat = fhat * indices
+    # fSig = np.fft.ifft(fhat)
+
+    # plt.plot(freqs[L],PSclean[L], label='Filtered')
+    # plt.xlabel('Frecuencia (Hz)')
+    # plt.title('Filtered Power Spectrum #'+str(x))
+    # plt.grid(True)
+    # plt.savefig('FilteredPowSpectrum'+str(x)+'.png')
+    # plt.clf()
+
+    # plt.plot(t, fSig, label='Filtered')
+    # plt.xlabel('Tiempo (s)')
+    # plt.title('Filtered signal Spectrum #'+str(x))
+    # plt.grid(True)
+    # plt.savefig('FilteredSignal'+str(x)+'.png')
+    # plt.clf()
+
+
+    # Amplitudes = SpecIn.amps**2
+    # indices = Amplitudes>200000
     # AmplitudesFiltradas = indices * Amplitudes
-    Frecuencias = SpecIn.fs
-    FrecuenciasFiltradas = indices * Frecuencias
-    SFilt = np.fft.ifft(FrecuenciasFiltradas)
-    plt.plot(SFilt, color='#d31c1c')
-    # PSpec.plot(color='#bd6ecf')
-    plt.xlabel('Frecuencia (Hz)')
-    plt.title('Filtered Spectrum #'+str(x))
-    plt.grid(True)
-    plt.savefig('FilteredPowSpectrum'+str(x)+'.png')
-    plt.clf()
+    # Frecuencias = SpecIn.fs
+    # FrecuenciasFiltradas = indices * Frecuencias
+    
+    # plt.plot(t,AmplitudesFiltradas, color='#d31c1c')
+    # # PSpec.plot(color='#bd6ecf')
+    # plt.xlabel('Frecuencia (Hz)')
+    # plt.title('Filtered Power Spectrum #'+str(x))
+    # plt.grid(True)
+    # plt.savefig('FilteredPowSpectrum'+str(x)+'.png')
+    # plt.clf()
+    
+    #------Creando Onda filtrada
+    # SFilt = np.fft.ifft(AmplitudesFiltradas)
+    # plt.plot(SFilt,SpecIn.hs, color='#d31c1c')
+    # plt.xlabel('Tiempo (s)')
+    # plt.title('Filtered wave #'+str(x))
+    # plt.grid(True)
+    # plt.savefig('Filtered Wave'+str(x)+'.png')
+    # plt.clf()
+    #---------------------------------------------------
 
     
 
