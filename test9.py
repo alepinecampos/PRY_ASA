@@ -20,8 +20,13 @@ power_spectrum = np.square(abs_fourier_transform) #Eleva amplitudes del espectro
 
 frequency = np.linspace(0, sampling_rate/2, len(power_spectrum)) #Array para eje x del ploteo
 
+#Starting separation/cleaning process
+indices = power_spectrum > 2500 #2500 como valor de corte. Todas las amplitudes superiores a 2500 pasan intactas, el resto es seteado a cero.
+power_spectrum_clean = power_spectrum * indices #Espectro de poder filtrado
+abs_fourier_transform_clean = abs_fourier_transform * indices #Espectro de frecuencias (normal) filtrado.
+clean_signal = np.fft.ifft(abs_fourier_transform_clean) #Transformada Inversa para obtener la señal filtrada en el tiempo.
 
-plt.plot(frequency, power_spectrum) #Ploteo de frecuencia (eje x) vs espectro de poder (eje y).
+plt.plot(frequency, clean_signal) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
 plt.show()
 
 
