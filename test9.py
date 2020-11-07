@@ -2,7 +2,6 @@ import numpy as np
 from scipy.io.wavfile import write
 from thinkdsp import read_wave
 import matplotlib.pyplot as plt
-from PIL import Image, ImageTk
 import winsound
 from numpy import fft
 
@@ -22,11 +21,17 @@ frequency = np.linspace(0, sampling_rate/2, len(power_spectrum)) #Array para eje
 
 #Starting separation/cleaning process
 indices = power_spectrum > 2500 #2500 como valor de corte. Todas las amplitudes superiores a 2500 pasan intactas, el resto es seteado a cero.
+indices2 = power_spectrum < 2500
 power_spectrum_clean = power_spectrum * indices #Espectro de poder filtrado
 abs_fourier_transform_clean = abs_fourier_transform * indices #Espectro de frecuencias (normal) filtrado.
+noise_spectrum = abs_fourier_transform * indices2 #Espectro de frecuencias (normal) del ruido removido.
 clean_signal = np.fft.ifft(abs_fourier_transform_clean) #Transformada Inversa para obtener la señal filtrada en el tiempo.
+noise_signal = np.fft.ifft(noise_spectrum) #Transformada Inversa para obtener la señal de ruido removido en el tiempo.
 
-plt.plot(frequency, clean_signal) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
+#Trying to get the clean signal to a WAV file
+write('SFiltradaTest.wav',sampling_rate,clean_signal)
+
+plt.plot(frequency, noise_signal) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
 plt.show()
 
 
