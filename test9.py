@@ -14,7 +14,7 @@ time = np.arange(0, 10, 1/sampling_rate)
 # data = np.sin(2*np.pi*6*time) + np.random.randn(len(time))
 data = read_wave('outputRecording1.wav').ys
 
-fourier_transform = np.fft.rfft(data) #DFT
+fourier_transform = np.fft.rfft(data) #Fourier Transform
 abs_fourier_transform = np.abs(fourier_transform) #Toma unicamente los positivos con valor abs. Se obtiene el espectro normal.
 power_spectrum = np.square(abs_fourier_transform) #Eleva amplitudes del espectro normal al cuadrado para obtener el espectro de poder
 
