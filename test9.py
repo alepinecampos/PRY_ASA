@@ -42,15 +42,19 @@ frecuenciasFiltradas = fourier_transform * indices
 # abs_fourier_transform_clean = abs_fourier_transform * indices #Espectro de frecuencias (normal) filtrado.
 # noise_spectrum = abs_fourier_transform * indices2 #Espectro de frecuencias (normal) del ruido removido.
 
-# clean_signal = np.fft.ifft(fourier_transform) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
-# clean_signal = np.asanyarray(np.abs(clean_signal[0:np.int64(1+len(clean_signal)/2)]))
+clean_signal = np.fft.ifft(frecuenciasFiltradas) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
+clean_signal = np.asanyarray(clean_signal)
+norm = np.linalg.norm(clean_signal)
+clean_signal = clean_signal/norm
 # time2 =  np.arange(1+len(dataW)/2) / sampling_rate
+time2 = np.fft.ifft(fs)
+time2 = np.asanyarray(fs)
 # noise_signal = np.fft.ifft(noise_spectrum) #Transformada Inversa para obtener la señal de ruido removido en el tiempo.
 
 #Trying to get the clean signal to a WAV file
 # write('SFiltradaTest.wav',sampling_rate,cleanS.astype(np.int16))
 
-plt.plot(fs, power_spectrum_clean) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
+plt.plot(time2, clean_signal) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
 plt.show()
 plt.clf()
 

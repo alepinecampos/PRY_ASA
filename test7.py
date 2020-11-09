@@ -11,6 +11,13 @@ from IPython.display import Audio #Probando uso de libreria para guardar señal 
 #Ejes frecuencias y tiempo original
 #Espectro de poder original
 
+#NOTE: De momento la señal puede ser filtrada y devuelta al dominio del tiempo
+# pero al plotear con variable 'time' para eje x se obtiene la señal con 'efecto espejo'
+# Al plotear con variable 'fs' para eje x se obtiene un resultado esperado pero con escala erronea
+#
+#
+#SOLUCION: Intentando hacer ifft para fs en espera de obtener una escala adecuada en fs
+
 sampling_rate = 46000
 
 
@@ -29,8 +36,18 @@ power_spectrum = np.square(fourier_transform) #Eleva amplitudes del espectro nor
 indices = power_spectrum > 4000000 #4000000 como valor de corte. Todas las amplitudes superiores a 2500 pasan intactas, el resto es seteado a cero.
 frecuenciasFiltradas = fourier_transform * indices
 
-plt.plot(fs, power_spectrum) #Ploteo de (eje x) vs (eje y).
+clean_signal = np.fft.ifft(frecuenciasFiltradas) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
+clean_signal = np.asanyarray(clean_signal)
+norm = np.linalg.norm(clean_signal) #Array para normalizar señal filtrada
+clean_signal = clean_signal/norm #Señal filtrada y normalizada
+
+# time2 = np.fft.ifft(fs) #Intentando obtener un eje x apropiado para la señal filtrada
+# time2 = np.asanyarray(fs) 
+
+
+plt.plot(fs, clean_signal) #Ploteo de (eje x) vs (eje y).
 plt.show()
+plt.clf()
 
 
 
