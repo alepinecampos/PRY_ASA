@@ -33,6 +33,7 @@ etiqueta=0
 global durations
 durations=[]
 
+
 #Función para iniciar grabación 
 def StartRecording():
     global etiqueta
@@ -86,20 +87,13 @@ def ShowResults():
     sIn_Label.grid(row=1, column=5, sticky="nsew", padx=1, pady=1)
 
 #Función para espectro de poder
-def PowSpec(f,num):
+def PowSpec(fs,transform,num):
     sampling_rate = 46000
-    dataW = f
-    dataW = np.asanyarray(dataW)
-    time = np.arange(len(dataW)) / sampling_rate #Array para eje x del ploteo (En Tiempo)
-
-    fourier_transform = np.fft.fft(dataW) #Fourier Transform (Espectro normal)
-    fourier_transform = np.asanyarray(np.abs(fourier_transform))
-    fs = np.fft.fftfreq(len(dataW),(1/sampling_rate)) #Array para eje x del ploteo (En Frecuencias)
-    fs = np.asanyarray(np.abs(fs))
-
-    power_spectrum = np.square(fourier_transform) #Eleva amplitudes del espectro normal al cuadrado para obtener el espectro de poder
+    
+    power_spectrum = np.square(transform) #Eleva amplitudes del espectro normal al cuadrado para obtener el espectro de poder
     plt.plot(fs, power_spectrum, color='#013e74') #Ploteo de (eje x) vs (eje y).
     plt.xlabel('Frecuencia (Hz)')
+    plt.ylabel('Poder')
     plt.title('Espectro de Poder #'+str(num))
     plt.grid(True)
     plt.savefig('PowerSpectrum'+str(num)+'.png')
@@ -110,7 +104,7 @@ def Recuperacion(num, cutoff):
     sampling_rate = 46000
     dataW = read_wave('outputRecording'+str(num)+'.wav').ys
     dataW = np.asanyarray(dataW)
-    time = np.arange(len(dataW)) / sampling_rate #Array para eje x del ploteo (En Tiempo)
+    # time = np.arange(len(dataW)) / sampling_rate #Array para eje x del ploteo (En Tiempo)
 
     fourier_transform = np.fft.fft(dataW) #Fourier Transform (Espectro normal)
     fourier_transform = np.asanyarray(np.abs(fourier_transform))
@@ -120,13 +114,15 @@ def Recuperacion(num, cutoff):
     power_spectrum = np.square(fourier_transform) #Eleva amplitudes del espectro normal al cuadrado para obtener el espectro de poder
 
     #Iniciando proceso de separación
-    indices = power_spectrum > (cutoff * 1000000) #Comparativa con valor de corte. Todas las amplitudes superiores a cutoffX10^6 pasan intactas, el resto es seteado a cero.
+    indices = power_spectrum > (cutoff * 10000) #Comparativa con valor de corte. Todas las amplitudes superiores a cutoffX10^4 pasan intactas, el resto es seteado a cero.
     frecuenciasFiltradas = fourier_transform * indices
 
     clean_signal = np.fft.ifft(frecuenciasFiltradas) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
     clean_signal = np.asanyarray(clean_signal)
     high, low = abs(max(clean_signal)), abs(min(clean_signal))
     clean_signal = 1 * clean_signal / max(high, low)
+
+    write('outputRecording_Filtered.wav',sampling_rate,clean_signal.astype(np.int16)) #Escritura de señal filtrada en archivo .WAV
     
     plt.plot(fs, frecuenciasFiltradas, color='#38aad5') #Ploteo de (eje x) vs (eje y).
     plt.xlabel('Frecuencia (Hz)')
@@ -146,28 +142,33 @@ def Recuperacion(num, cutoff):
 #Funcion para guardar figuras de onda y mostrarlas(#1)
 def Save_Show_Wave_Spec(x):
     WaveIn = read_wave('outputRecording'+str(x)+'.wav')
-    dataPS = WaveIn.ys
-    WaveIn.plot(color='#66a3ff')
+    dataW = WaveIn.ys
+    dataW = np.asanyarray(dataW)
+    sampling_rate = 46000
+    time = np.arange(len(dataW)) / sampling_rate #Array para eje x del ploteo (En Tiempo)
+
+    fourier_transform = np.fft.fft(dataW) #Fourier Transform (Espectro normal)
+    fourier_transform = np.asanyarray(np.abs(fourier_transform))
+    fs = np.fft.fftfreq(len(dataW),(1/sampling_rate)) #Array para eje x del ploteo (En Frecuencias)
+    fs = np.asanyarray(np.abs(fs))
+
+    plt.plot(time, dataW,color='#3fb4c7') #Ploteo de onda original
     plt.xlabel('Tiempo (s)')
     plt.title('Onda #'+str(x))
     plt.grid(True)
     plt.savefig('Wave'+str(x)+'.png')
     plt.clf()
-    SpecIn = WaveIn.make_spectrum()
-    SpecIn.plot(color='#ff471a')
+
+    plt.plot(fs, fourier_transform,color='#3f76c7') #Ploteo de espectro de frecuencias
     plt.xlabel('Frecuencia (Hz)')
     plt.ylabel('Amplitud')
     plt.title('Espectro #'+str(x))
     plt.grid(True)
     plt.savefig('Spectrum'+str(x)+'.png')
     plt.clf()
-    SpecIn.plot_power()
-    plt.xlabel('Frecuencia (Hz)')
-    plt.title('Espectro de Poder #'+str(x))
-    plt.grid(True)
-    plt.savefig('PowerSpectrum'+str(x)+'.png')
-    plt.clf()
-    PowSpec(dataPS,x) #Espectro de poder
+
+    PowSpec(fs,fourier_transform,x) #Espectro de poder
+
     #WaveImage
     wIn_Img=Image.open('Wave'+str(x)+'.png')
     wIn_Img = wIn_Img.resize((int((wIn_Img.width)-((wIn_Img.width)*0.5)),int((wIn_Img.height)-((wIn_Img.height)*0.5))), Image.ANTIALIAS)
@@ -200,6 +201,15 @@ def FiltrarS(S,F,Corte5):
     if (S==1):
         if (F==5):
             Recuperacion(S,Corte5)
+    
+    if (S==2):
+        if (F==5):
+            Recuperacion(S,Corte5)
+    
+    if (S==3):
+        if (F==5):
+            Recuperacion(S,Corte5)
+
     if (S==1) and (F==1):
         SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
         EspFiltrar= SFiltrar.make_spectrum()
@@ -608,11 +618,11 @@ sBox5= tk.Spinbox(frame5, from_=0,to=5,wrap=True) #Filtros
 sBox5.place(relx=0.15, rely=0.08, relwidth=0.1, relheight=0.02)
 label=Label(frame5, text="Seleccione filtro para filtrar \nla señal seleccionada:", bg="#5cc1dc")
 label.place(relx=0, rely=0.08)
-sBox6= tk.Spinbox(frame5, from_=0,to=8,wrap=True) #Corte Filtro #5
+sBox6= tk.Spinbox(frame5, from_=0,to=3000,wrap=True) #Corte Filtro #5
 sBox6.place(relx=0.15, rely=0.17, relwidth=0.1, relheight=0.02)
 label=Label(frame5, text="Seleccione corte para filtro \nrecuperación de señales:", bg="#5cc1dc")
 label.place(relx=0, rely=0.16)
-label=Label(frame5, text="Nótese que el número seleccionado \n es alterado por un factor de E^6 \n Ejemplo: Si el número seleccionado es 1,\n el corte se realizará en 1,000,000", bg="#5cc1dc")
+label=Label(frame5, text="Nótese que el número seleccionado \n es alterado por un factor de E^4 \n Ejemplo: Si el número seleccionado es 1,\n el corte se realizará en 10,000", bg="#5cc1dc")
 label.place(relx=0.25, rely=0.15)
 
 #Creating Filter Button

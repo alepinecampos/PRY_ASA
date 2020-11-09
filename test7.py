@@ -41,11 +41,9 @@ clean_signal = np.asanyarray(clean_signal)
 high, low = abs(max(clean_signal)), abs(min(clean_signal))
 clean_signal = 1 * clean_signal / max(high, low)
 
-# time2 = np.fft.ifft(fs) #Intentando obtener un eje x apropiado para la señal filtrada
-# time2 = np.asanyarray(fs) 
+write('outputFiltered.wav',sampling_rate,clean_signal.astype(np.int16)) #Escritura de señal filtrada en archivo .WAV
 
-
-plt.plot(fs, clean_signal, color='#66a3ff') #Ploteo de (eje x) vs (eje y).
+plt.plot(time, dataW, color='#66a3ff') #Ploteo de (eje x) vs (eje y).
 plt.show()
 plt.clf()
 

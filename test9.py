@@ -33,7 +33,7 @@ power_spectrum = np.square(fourier_transform) #Eleva amplitudes del espectro nor
 
 
 #Starting separation/cleaning process
-indices = power_spectrum > 4000000 #X como valor de corte. Todas las amplitudes superiores a 2500 pasan intactas, el resto es seteado a cero.
+indices = power_spectrum > 5000000 #X como valor de corte. Todas las amplitudes superiores a 2500 pasan intactas, el resto es seteado a cero.
 # indices2 = power_spectrum < 4000000
 
 power_spectrum_clean = power_spectrum * indices #Espectro de poder filtrado
@@ -52,9 +52,9 @@ clean_signal = 1 * clean_signal / max(high, low)
 # noise_signal = np.fft.ifft(noise_spectrum) #Transformada Inversa para obtener la señal de ruido removido en el tiempo.
 
 #Trying to get the clean signal to a WAV file
-# write('SFiltradaTest.wav',sampling_rate,cleanS.astype(np.int16))
+write('SFiltradaTest.wav',sampling_rate,clean_signal.astype(np.int16))
 
-plt.plot(fs,) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
+plt.plot(fs, clean_signal) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
 plt.show()
 plt.clf()
 
