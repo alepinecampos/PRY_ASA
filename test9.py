@@ -44,8 +44,7 @@ frecuenciasFiltradas = fourier_transform * indices
 
 clean_signal = np.fft.ifft(frecuenciasFiltradas) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
 clean_signal = np.asanyarray(clean_signal)
-# norm = np.linalg.norm(clean_signal)
-# clean_signal = clean_signal/norm
+
 
 high, low = abs(max(clean_signal)), abs(min(clean_signal))
 clean_signal = 1 * clean_signal / max(high, low)
@@ -55,7 +54,7 @@ clean_signal = 1 * clean_signal / max(high, low)
 #Trying to get the clean signal to a WAV file
 # write('SFiltradaTest.wav',sampling_rate,cleanS.astype(np.int16))
 
-plt.plot(fs, clean_signal) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
+plt.plot(fs,) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
 plt.show()
 plt.clf()
 

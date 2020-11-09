@@ -68,9 +68,85 @@ def ShowDuration(x):
         label = Label(frame4, text='Horas: '+durations[x+3]+'\n'+'Minutos: '+durations[x+4]+'\n'+'Segundos: '+durations[x+5])
         label.grid(row=x, column=1, sticky="nsew", padx=1, pady=1)
     
+#Funcion para mostrar imagenes en pestaña resultados
+def ShowResults():
+    #FilteredWaveImage
+    wIn_Img=Image.open('Filtered_Wave.png')
+    wIn_Img = wIn_Img.resize((int((wIn_Img.width)-((wIn_Img.width)*0.5)),int((wIn_Img.height)-((wIn_Img.height)*0.5))), Image.ANTIALIAS)
+    render1=ImageTk.PhotoImage(wIn_Img)
+    wIn_Label = Label(frame7,image=render1)
+    wIn_Label.image = render1
+    wIn_Label.grid(row=1, column=4, sticky="nsew", padx=1, pady=1)
+    #FilteredSpectrumImage
+    sIn_Img=Image.open('Filtered_Spectrum.png')
+    sIn_Img = sIn_Img.resize((int((sIn_Img.width)-((sIn_Img.width)*0.5)),int((sIn_Img.height)-((sIn_Img.height)*0.5))), Image.ANTIALIAS)
+    render2=ImageTk.PhotoImage(sIn_Img)
+    sIn_Label = Label(frame7,image=render2)
+    sIn_Label.image=render2
+    sIn_Label.grid(row=1, column=5, sticky="nsew", padx=1, pady=1)
+
+#Función para espectro de poder
+def PowSpec(f,num):
+    sampling_rate = 46000
+    dataW = f
+    dataW = np.asanyarray(dataW)
+    time = np.arange(len(dataW)) / sampling_rate #Array para eje x del ploteo (En Tiempo)
+
+    fourier_transform = np.fft.fft(dataW) #Fourier Transform (Espectro normal)
+    fourier_transform = np.asanyarray(np.abs(fourier_transform))
+    fs = np.fft.fftfreq(len(dataW),(1/sampling_rate)) #Array para eje x del ploteo (En Frecuencias)
+    fs = np.asanyarray(np.abs(fs))
+
+    power_spectrum = np.square(fourier_transform) #Eleva amplitudes del espectro normal al cuadrado para obtener el espectro de poder
+    plt.plot(fs, power_spectrum, color='#013e74') #Ploteo de (eje x) vs (eje y).
+    plt.xlabel('Frecuencia (Hz)')
+    plt.title('Espectro de Poder #'+str(num))
+    plt.grid(True)
+    plt.savefig('PowerSpectrum'+str(num)+'.png')
+    plt.clf()
+    
+#Funcion para recuperacion de señal
+def Recuperacion(num, cutoff):
+    sampling_rate = 46000
+    dataW = read_wave('outputRecording'+str(num)+'.wav').ys
+    dataW = np.asanyarray(dataW)
+    time = np.arange(len(dataW)) / sampling_rate #Array para eje x del ploteo (En Tiempo)
+
+    fourier_transform = np.fft.fft(dataW) #Fourier Transform (Espectro normal)
+    fourier_transform = np.asanyarray(np.abs(fourier_transform))
+    fs = np.fft.fftfreq(len(dataW),(1/sampling_rate)) #Array para eje x del ploteo (En Frecuencias)
+    fs = np.asanyarray(np.abs(fs))
+
+    power_spectrum = np.square(fourier_transform) #Eleva amplitudes del espectro normal al cuadrado para obtener el espectro de poder
+
+    #Iniciando proceso de separación
+    indices = power_spectrum > (cutoff * 1000000) #Comparativa con valor de corte. Todas las amplitudes superiores a cutoffX10^6 pasan intactas, el resto es seteado a cero.
+    frecuenciasFiltradas = fourier_transform * indices
+
+    clean_signal = np.fft.ifft(frecuenciasFiltradas) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
+    clean_signal = np.asanyarray(clean_signal)
+    high, low = abs(max(clean_signal)), abs(min(clean_signal))
+    clean_signal = 1 * clean_signal / max(high, low)
+    
+    plt.plot(fs, frecuenciasFiltradas, color='#38aad5') #Ploteo de (eje x) vs (eje y).
+    plt.xlabel('Frecuencia (Hz)')
+    plt.ylabel('Amplitud')
+    plt.title('Espectro Filtrado')
+    plt.grid(True)
+    plt.savefig('Filtered_Spectrum.png')
+    plt.clf()
+    plt.plot(fs, clean_signal, color='#86d538') #Ploteo de (eje x) vs (eje y).
+    plt.xlabel('Tiempo (s)')
+    plt.title('Onda Filtrada')
+    plt.grid(True)
+    plt.savefig('Filtered_Wave.png')
+    plt.clf()
+    ShowResults()
+
 #Funcion para guardar figuras de onda y mostrarlas(#1)
 def Save_Show_Wave_Spec(x):
     WaveIn = read_wave('outputRecording'+str(x)+'.wav')
+    dataPS = WaveIn.ys
     WaveIn.plot(color='#66a3ff')
     plt.xlabel('Tiempo (s)')
     plt.title('Onda #'+str(x))
@@ -80,6 +156,7 @@ def Save_Show_Wave_Spec(x):
     SpecIn = WaveIn.make_spectrum()
     SpecIn.plot(color='#ff471a')
     plt.xlabel('Frecuencia (Hz)')
+    plt.ylabel('Amplitud')
     plt.title('Espectro #'+str(x))
     plt.grid(True)
     plt.savefig('Spectrum'+str(x)+'.png')
@@ -88,9 +165,9 @@ def Save_Show_Wave_Spec(x):
     plt.xlabel('Frecuencia (Hz)')
     plt.title('Espectro de Poder #'+str(x))
     plt.grid(True)
-    plt.savefig('Power Spectrum'+str(x)+'.png')
+    plt.savefig('PowerSpectrum'+str(x)+'.png')
     plt.clf()
-
+    PowSpec(dataPS,x) #Espectro de poder
     #WaveImage
     wIn_Img=Image.open('Wave'+str(x)+'.png')
     wIn_Img = wIn_Img.resize((int((wIn_Img.width)-((wIn_Img.width)*0.5)),int((wIn_Img.height)-((wIn_Img.height)*0.5))), Image.ANTIALIAS)
@@ -105,13 +182,24 @@ def Save_Show_Wave_Spec(x):
     sIn_Label = Label(frame4,image=render2)
     sIn_Label.image=render2
     sIn_Label.grid(row=x, column=6, sticky="nsew", padx=1, pady=1)
+    #PowerSpectrumImage
+    sIn_Img=Image.open('PowerSpectrum'+str(x)+'.png')
+    sIn_Img = sIn_Img.resize((int((sIn_Img.width)-((sIn_Img.width)*0.5)),int((sIn_Img.height)-((sIn_Img.height)*0.5))), Image.ANTIALIAS)
+    render2=ImageTk.PhotoImage(sIn_Img)
+    sIn_Label = Label(frame4,image=render2)
+    sIn_Label.image=render2
+    sIn_Label.grid(row=x, column=7, sticky="nsew", padx=1, pady=1)
+
     ShowDuration(x)
 
 #Función para filtrado de señal
 #PASA-BAJO -> 10000 Hz
 #PASA-ALTO -> 1000 Hz
 #PASA-BANDA -> 1000-5000 Hz
-def FiltrarS(S,F):
+def FiltrarS(S,F,Corte5):
+    if (S==1):
+        if (F==5):
+            Recuperacion(S,Corte5)
     if (S==1) and (F==1):
         SFiltrar=read_wave('outputRecording'+str(S)+'.wav')
         EspFiltrar= SFiltrar.make_spectrum()
@@ -444,17 +532,17 @@ frame4 = tk.Frame(tab2, bg='#cd9f1b', bd=1)
 frame4.place(relx=0, rely=0, relwidth=1.2, relheight=1.3)
 
 #Frames, for filter description
-frame6 = tk.Frame(tab3, bg='#1bb2cd', bd=1)#Titulo Filtros
+frame6 = tk.Frame(tab3, bg='#5cc1dc', bd=1)#Titulo Filtros
 frame6.place(relx=0, rely=0, relwidth=0.4, relheight=0.06)
 
-frame3 = tk.Frame(tab3, bg='#1bb2cd', bd=1)#Info Filtros
+frame3 = tk.Frame(tab3, bg='#5cc1dc', bd=1)#Info Filtros
 frame3.place(relx=0, rely=0.05, relwidth=0.4, relheight=1.3)
 
-frame5 = tk.Frame(tab3, bg='#1bb2cd', bd=1)#SpinBoxes Filtros
+frame5 = tk.Frame(tab3, bg='#5cc1dc', bd=1)#SpinBoxes Filtros
 frame5.place(relx=0.4, rely=0, relwidth=0.8, relheight=1.3)
 
 #Frame, for filtered results
-frame7 = tk.Frame(tab4, bg='#d8c97d', bd=1)
+frame7 = tk.Frame(tab4, bg='#cd9f1b', bd=1)
 frame7.place(relx=0, rely=0, relwidth=1.2, relheight=1.3)
 
 
@@ -480,7 +568,7 @@ label.place(relx=0.81, rely=0)
 #-----------------------------------------------------------Pestaña-Filtros-----------------------------------------------------------------------#
 #----------------------------------FRAME #6--------------------------------------------#
 #Descripciones de filtros
-label = Label(frame6, text="A continuación se presenta un listado de los \nfiltros disponibles con una breve descripción:", bg="#1bb2cd")
+label = Label(frame6, text="A continuación se presenta un listado de los \nfiltros disponibles con una breve descripción:", bg="#5cc1dc")
 label.place(relx=0, rely=0)
 #----------------------------------FRAME #3--------------------------------------------#
 #'Tabla' para mostrar información de filtros disponibles
@@ -514,15 +602,22 @@ label.grid(row=5, column=1, sticky="nsew", padx=1, pady=1)
 #Creating SpinBoxes
 sBox4= tk.Spinbox(frame5, from_=0,to=3,wrap=True) #Señales
 sBox4.place(relx=0.12, rely=0.01, relwidth=0.1, relheight=0.02)
-label=Label(frame5, text="Seleccione la señal \nque desea filtrar:", bg="#1bb2cd")
+label=Label(frame5, text="Seleccione la señal \nque desea filtrar:", bg="#5cc1dc")
 label.place(relx=0, rely=0)
 sBox5= tk.Spinbox(frame5, from_=0,to=5,wrap=True) #Filtros
-sBox5.place(relx=0.15, rely=0.1, relwidth=0.1, relheight=0.02)
-label=Label(frame5, text="Seleccione filtro para filtrar \nla señal seleccionada:", bg="#1bb2cd")
-label.place(relx=0, rely=0.09)
+sBox5.place(relx=0.15, rely=0.08, relwidth=0.1, relheight=0.02)
+label=Label(frame5, text="Seleccione filtro para filtrar \nla señal seleccionada:", bg="#5cc1dc")
+label.place(relx=0, rely=0.08)
+sBox6= tk.Spinbox(frame5, from_=0,to=8,wrap=True) #Corte Filtro #5
+sBox6.place(relx=0.15, rely=0.17, relwidth=0.1, relheight=0.02)
+label=Label(frame5, text="Seleccione corte para filtro \nrecuperación de señales:", bg="#5cc1dc")
+label.place(relx=0, rely=0.16)
+label=Label(frame5, text="Nótese que el número seleccionado \n es alterado por un factor de E^6 \n Ejemplo: Si el número seleccionado es 1,\n el corte se realizará en 1,000,000", bg="#5cc1dc")
+label.place(relx=0.25, rely=0.15)
+
 #Creating Filter Button
-btn8 = tk.Button(frame5, text="Filtrar", command= lambda: FiltrarS(int(sBox4.get()),int(sBox5.get())))
-btn8.place(relx=0.05, rely=0.14, relwidth=0.04, relheight=0.04)
+btn8 = tk.Button(frame5, text="Filtrar", command= lambda: FiltrarS(int(sBox4.get()),int(sBox5.get()),int(sBox6.get())))
+btn8.place(relx=0.05, rely=0.24, relwidth=0.04, relheight=0.04)
 
 #-----------------------------------------------------------Pestaña-Datos-----------------------------------------------------------------------#
 #----------------------------------FRAME #4--------------------------------------------#
@@ -572,9 +667,12 @@ btn7.grid(row=3, column=4, sticky="nsew", padx=1, pady=1)
 #Columna #5(Onda antes del filtro)
 label = Label(frame4, text="Onda Original")
 label.grid(row=0, column=5, sticky="nsew", padx=1, pady=1)
-#Columna #7(Espectro antes del filtro)
+#Columna #6(Espectro antes del filtro)
 label = Label(frame4, text="Espectro Original")
 label.grid(row=0, column=6, sticky="nsew", padx=1, pady=1)
+#Columna #7(Espectro de poder)
+label = Label(frame4, text="Espectro de Poder")
+label.grid(row=0, column=7, sticky="nsew", padx=1, pady=1)
 
 #-----------------------------------------------------------Pestaña-Resultados-----------------------------------------------------------------------#
 #----------------------------------FRAME #7--------------------------------------------#

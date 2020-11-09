@@ -45,7 +45,7 @@ clean_signal = 1 * clean_signal / max(high, low)
 # time2 = np.asanyarray(fs) 
 
 
-plt.plot(fs, clean_signal) #Ploteo de (eje x) vs (eje y).
+plt.plot(fs, clean_signal, color='#66a3ff') #Ploteo de (eje x) vs (eje y).
 plt.show()
 plt.clf()
 
