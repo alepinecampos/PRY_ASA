@@ -6,7 +6,7 @@ from numpy import fft
 from IPython.display import Audio #Probando uso de libreria para guardar señal filatrada en archivo .WAV
 
 
-sampling_rate = 46100
+sampling_rate = 46000
 
 
 
@@ -14,32 +14,41 @@ dataW = read_wave('outputRecording1.wav').ys
 dataW = np.asanyarray(dataW)
 time = np.arange(len(dataW)) / sampling_rate #Array para eje x del ploteo (En Tiempo)
 
+l = len(dataW)
+l = l//2
+l = np.int64(l)
 
-fourier_transform = np.fft.rfft(dataW) #Fourier Transform (Espectro normal)
-abs_fourier_transform = np.abs(fourier_transform) #Toma unicamente los positivos con valor abs. Se obtiene el espectro normal.
-power_spectrum = np.square(abs_fourier_transform) #Eleva amplitudes del espectro normal al cuadrado para obtener el espectro de poder
+fourier_transform = np.fft.fft(dataW) #Fourier Transform (Espectro normal)
+fourier_transform = np.asanyarray(np.abs(fourier_transform))
+fs = np.fft.fftfreq(len(dataW),(1/sampling_rate))
+fs = np.asanyarray(np.abs(fs))
 
-frequency = np.linspace(0, sampling_rate/2, len(power_spectrum)) #Array para eje x del ploteo (En Frecuencias)
+# abs_fourier_transform = np.abs(fourier_transform)#Toma unicamente los positivos con valor abs. Se obtiene el espectro normal.
+# abs_fourier_transform = np.abs(fourier_transform[0:l])
+# abs_fourier_transform.resize(l*2, refcheck=False)
+power_spectrum = np.square(fourier_transform) #Eleva amplitudes del espectro normal al cuadrado para obtener el espectro de poder
+
+# frequency = np.linspace(0, sampling_rate/2, len(power_spectrum)) #Array para eje x del ploteo (En Frecuencias)
 
 
 #Starting separation/cleaning process
-indices = power_spectrum > 3000 #2500 como valor de corte. Todas las amplitudes superiores a 2500 pasan intactas, el resto es seteado a cero.
-indices2 = power_spectrum < 3000
+# indices = power_spectrum > 3000 #2500 como valor de corte. Todas las amplitudes superiores a 2500 pasan intactas, el resto es seteado a cero.
+# indices2 = power_spectrum < 3000
 
-power_spectrum_clean = power_spectrum * indices #Espectro de poder filtrado
-frecuenciasFiltradas = fourier_transform * indices
+# power_spectrum_clean = power_spectrum * indices #Espectro de poder filtrado
+# frecuenciasFiltradas = fourier_transform * indices
 
 # abs_fourier_transform_clean = abs_fourier_transform * indices #Espectro de frecuencias (normal) filtrado.
 # noise_spectrum = abs_fourier_transform * indices2 #Espectro de frecuencias (normal) del ruido removido.
 
-clean_signal = np.fft.ifft(frecuenciasFiltradas) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
-time2 =  np.arange(1+len(dataW)/2) / sampling_rate
+# clean_signal = np.fft.ifft(frecuenciasFiltradas) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
+# time2 =  np.arange(1+len(dataW)/2) / sampling_rate
 # noise_signal = np.fft.ifft(noise_spectrum) #Transformada Inversa para obtener la señal de ruido removido en el tiempo.
 
 #Trying to get the clean signal to a WAV file
 # write('SFiltradaTest.wav',sampling_rate,cleanS.astype(np.int16))
 
-plt.plot(frequency, fourier_transform) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
+plt.plot(fs, power_spectrum) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
 plt.show()
 
 

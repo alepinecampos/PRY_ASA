@@ -44,7 +44,7 @@ def StartRecording():
     durations.append(sBox1.get()) #Adds duration of recording to array for further use
     durations.append(sBox2.get()) #Adds duration of recording to array for further use
     durations.append(sBox3.get()) #Adds duration of recording to array for further use
-    fs = 46100 #Sample Rate
+    fs = 46000 #Sample Rate
     seconds = (H+M+S) #Duration of recording
     recording = sd.rec(int(seconds*fs), samplerate=fs, channels=1, dtype=np.int16)
     sd.wait() #Wait until recording is finished
