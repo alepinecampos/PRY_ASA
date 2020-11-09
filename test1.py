@@ -88,8 +88,7 @@ def ShowResults():
 
 #Función para espectro de poder
 def PowSpec(fs,transform,num):
-    sampling_rate = 46000
-    
+   
     power_spectrum = np.square(transform) #Eleva amplitudes del espectro normal al cuadrado para obtener el espectro de poder
     plt.plot(fs, power_spectrum, color='#013e74') #Ploteo de (eje x) vs (eje y).
     plt.xlabel('Frecuencia (Hz)')
@@ -122,7 +121,6 @@ def Recuperacion(num, cutoff):
     high, low = abs(max(clean_signal)), abs(min(clean_signal))
     clean_signal = 1 * clean_signal / max(high, low)
 
-    write('outputRecording_Filtered.wav',sampling_rate,clean_signal.astype(np.int16)) #Escritura de señal filtrada en archivo .WAV
     
     plt.plot(fs, frecuenciasFiltradas, color='#38aad5') #Ploteo de (eje x) vs (eje y).
     plt.xlabel('Frecuencia (Hz)')
@@ -137,6 +135,10 @@ def Recuperacion(num, cutoff):
     plt.grid(True)
     plt.savefig('Filtered_Wave.png')
     plt.clf()
+    
+    clean_signal = np.abs(clean_signal)
+    write('outputRecording_Filtered.wav',sampling_rate,clean_signal.astype(np.int16)) #Escritura de señal filtrada en archivo .WAV
+
     ShowResults()
 
 #Funcion para guardar figuras de onda y mostrarlas(#1)
