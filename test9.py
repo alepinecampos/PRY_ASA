@@ -13,10 +13,11 @@ sampling_rate = 46000
 dataW = read_wave('outputRecording1.wav').ys
 dataW = np.asanyarray(dataW)
 time = np.arange(len(dataW)) / sampling_rate #Array para eje x del ploteo (En Tiempo)
+time = np.asanyarray(time)
 
-l = len(dataW)
-l = l//2
-l = np.int64(l)
+# l = len(dataW)
+# l = l//2
+# l = np.int64(l)
 
 fourier_transform = np.fft.fft(dataW) #Fourier Transform (Espectro normal)
 fourier_transform = np.asanyarray(np.abs(fourier_transform))
@@ -32,25 +33,26 @@ power_spectrum = np.square(fourier_transform) #Eleva amplitudes del espectro nor
 
 
 #Starting separation/cleaning process
-# indices = power_spectrum > 3000 #2500 como valor de corte. Todas las amplitudes superiores a 2500 pasan intactas, el resto es seteado a cero.
-# indices2 = power_spectrum < 3000
+indices = power_spectrum > 4000000 #X como valor de corte. Todas las amplitudes superiores a 2500 pasan intactas, el resto es seteado a cero.
+# indices2 = power_spectrum < 4000000
 
-# power_spectrum_clean = power_spectrum * indices #Espectro de poder filtrado
-# frecuenciasFiltradas = fourier_transform * indices
+power_spectrum_clean = power_spectrum * indices #Espectro de poder filtrado
+frecuenciasFiltradas = fourier_transform * indices
 
 # abs_fourier_transform_clean = abs_fourier_transform * indices #Espectro de frecuencias (normal) filtrado.
 # noise_spectrum = abs_fourier_transform * indices2 #Espectro de frecuencias (normal) del ruido removido.
 
-# clean_signal = np.fft.ifft(frecuenciasFiltradas) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
+# clean_signal = np.fft.ifft(fourier_transform) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
+# clean_signal = np.asanyarray(np.abs(clean_signal[0:np.int64(1+len(clean_signal)/2)]))
 # time2 =  np.arange(1+len(dataW)/2) / sampling_rate
 # noise_signal = np.fft.ifft(noise_spectrum) #Transformada Inversa para obtener la señal de ruido removido en el tiempo.
 
 #Trying to get the clean signal to a WAV file
 # write('SFiltradaTest.wav',sampling_rate,cleanS.astype(np.int16))
 
-plt.plot(fs, power_spectrum) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
+plt.plot(fs, power_spectrum_clean) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
 plt.show()
-
+plt.clf()
 
 
 

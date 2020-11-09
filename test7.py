@@ -7,9 +7,9 @@ from IPython.display import Audio #Probando uso de libreria para guardar señal 
 
 #08/11/2020-23:06 
 #Lectura de .WAV y extracción de amplitudes
-#Espectro por FFT 
+#Espectro por FFT original y filtrado con indices
 #Ejes frecuencias y tiempo original
-#Espectro de poder
+#Espectro de poder original
 
 sampling_rate = 46000
 
@@ -24,6 +24,10 @@ fs = np.fft.fftfreq(len(dataW),(1/sampling_rate)) #Array para eje x del ploteo (
 fs = np.asanyarray(np.abs(fs))
 
 power_spectrum = np.square(fourier_transform) #Eleva amplitudes del espectro normal al cuadrado para obtener el espectro de poder
+
+#Iniciando proceso de separación
+indices = power_spectrum > 4000000 #4000000 como valor de corte. Todas las amplitudes superiores a 2500 pasan intactas, el resto es seteado a cero.
+frecuenciasFiltradas = fourier_transform * indices
 
 plt.plot(fs, power_spectrum) #Ploteo de (eje x) vs (eje y).
 plt.show()

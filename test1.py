@@ -84,11 +84,12 @@ def Save_Show_Wave_Spec(x):
     plt.grid(True)
     plt.savefig('Spectrum'+str(x)+'.png')
     plt.clf()
-    #----------------Testing Power Spectrum------------------
-    
-    #---------------------------------------------------
-
-    
+    SpecIn.plot_power()
+    plt.xlabel('Frecuencia (Hz)')
+    plt.title('Espectro de Poder #'+str(x))
+    plt.grid(True)
+    plt.savefig('Power Spectrum'+str(x)+'.png')
+    plt.clf()
 
     #WaveImage
     wIn_Img=Image.open('Wave'+str(x)+'.png')
