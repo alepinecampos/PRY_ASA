@@ -38,8 +38,8 @@ frecuenciasFiltradas = fourier_transform * indices
 
 clean_signal = np.fft.ifft(frecuenciasFiltradas) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
 clean_signal = np.asanyarray(clean_signal)
-norm = np.linalg.norm(clean_signal) #Array para normalizar señal filtrada
-clean_signal = clean_signal/norm #Señal filtrada y normalizada
+high, low = abs(max(clean_signal)), abs(min(clean_signal))
+clean_signal = 1 * clean_signal / max(high, low)
 
 # time2 = np.fft.ifft(fs) #Intentando obtener un eje x apropiado para la señal filtrada
 # time2 = np.asanyarray(fs) 

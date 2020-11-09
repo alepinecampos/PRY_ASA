@@ -44,17 +44,18 @@ frecuenciasFiltradas = fourier_transform * indices
 
 clean_signal = np.fft.ifft(frecuenciasFiltradas) #Transformada Inversa para obtener la señal filtrada COMPLETA en el tiempo.
 clean_signal = np.asanyarray(clean_signal)
-norm = np.linalg.norm(clean_signal)
-clean_signal = clean_signal/norm
-# time2 =  np.arange(1+len(dataW)/2) / sampling_rate
-time2 = np.fft.ifft(fs)
-time2 = np.asanyarray(fs)
+# norm = np.linalg.norm(clean_signal)
+# clean_signal = clean_signal/norm
+
+high, low = abs(max(clean_signal)), abs(min(clean_signal))
+clean_signal = 1 * clean_signal / max(high, low)
+
 # noise_signal = np.fft.ifft(noise_spectrum) #Transformada Inversa para obtener la señal de ruido removido en el tiempo.
 
 #Trying to get the clean signal to a WAV file
 # write('SFiltradaTest.wav',sampling_rate,cleanS.astype(np.int16))
 
-plt.plot(time2, clean_signal) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
+plt.plot(fs, clean_signal) #Ploteo de frecuencia (eje x) vs señal filtrada (eje y).
 plt.show()
 plt.clf()
 
@@ -62,54 +63,8 @@ plt.clf()
 
 
 
-# WaveIn = read_wave('outputRecording1.wav')
-# WaveIn.plot(color='#66a3ff')
-# plt.xlabel('Tiempo (s)')
-# plt.title('Onda #1')
-# plt.grid(True)
-# plt.savefig('Wave1.png')
-# plt.clf()
-# SpecIn = WaveIn.make_spectrum()
-# SpecIn.plot(color='#ff471a')
-# plt.xlabel('Frecuencia (Hz)')
-# plt.title('Espectro #1')
-# plt.grid(True)
-# plt.savefig('Spectrum1.png')
-# plt.clf()
-# #----------------Testing Power Spectrum------------------
-# plt.plot(SpecIn.fs,SpecIn.amps**2,color='#bd6ecf')
-# plt.xlabel('Frecuencia (Hz)')
-# plt.title('Power Spectrum #1')
-# plt.grid(True)
-# plt.savefig('PowSpectrum1.png')
-# plt.clf()
 
-# #--------------------------------------------------
-# t = np.arange(0,46100,(1/46100))
-# r = len(t)
-# fhat = np.fft.fft(SpecIn.amps,r) #Complex values Fourier Coef
-# PS = fhat * np.conj(fhat)/r #Power Spectrum
-# freqs = (1/((1/46100)*r)) * np.arange(r)
-# L = np.arange(1,np.floor(r/2),dtype='int')
 
-# plt.plot(freqs[L],PS[L], label='Noisy')
-# plt.xlabel('Frecuencia (Hz)')
-# plt.title('Noisy Power Spectrum #1')
-# plt.grid(True)
-# plt.savefig('NoisyPowSpectrum1.png')
-# plt.clf()
-    
-# indices = PS > 200000
-# PSclean = PS * indices
-# fhat = fhat * indices
-# fSig = np.fft.ifft(fhat)
-
-# plt.plot(freqs[L],PSclean[L], label='Filtered')
-# plt.xlabel('Frecuencia (Hz)')
-# plt.title('Filtered Power Spectrum #1')
-# plt.grid(True)
-# plt.savefig('FilteredPowSpectrum1.png')
-# plt.clf()
 
 # plt.plot(t, fSig, label='Filtered')
 # plt.xlabel('Tiempo (s)')
